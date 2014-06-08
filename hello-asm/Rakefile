@@ -1,0 +1,22 @@
+SOURCE_FILE = 'hello.asm'
+BINARY_FILE = 'hello.bin'
+IMAGE_FILE  = 'floppy.img'
+
+task :default => :run
+
+task :run => [ BINARY_FILE, IMAGE_FILE ] do
+  sh "dd status=noxfer conv=notrunc if=#{BINARY_FILE} of=#{IMAGE_FILE}"
+  sh "qemu -boot a -fda #{IMAGE_FILE} -curses -monitor stdio"
+end
+
+file BINARY_FILE => SOURCE_FILE do
+  sh "nasm -f bin -o #{BINARY_FILE} #{SOURCE_FILE}"
+end
+
+file IMAGE_FILE do
+  sh "qemu-img create -f raw #{IMAGE_FILE} 1440K"
+end
+
+require 'rake/clean'
+CLEAN.include([ '*.bin', '*.img' ])
+
