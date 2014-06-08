@@ -4,3 +4,4 @@
 *.o
 hello-c/*.s
 hello-c-optimization/*.s
+hello-c-module/*.s
