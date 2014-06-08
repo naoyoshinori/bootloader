@@ -1,7 +1,7 @@
 ; print_string.asm
 [BITS 16]           ; リアルモード
 
-global print_string ; 他のモジュールでシンボル(print_string)を利用できるようにする
+global print_string ; 他のモジュールからシンボル(print_string)を利用できるようにする
 
 print_char:
 mov   ah, 0x0E      ; BIOSに一文字表示を伝える
