@@ -1,3 +1,6 @@
 .vagrant
 *.img
 *.bin
+*.o
+hello-c/*.s
+hello-c-optimization/*.s

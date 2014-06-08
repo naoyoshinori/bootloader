@@ -1,0 +1,31 @@
+OBJECT_FILE = 'hello.o'
+BINARY_FILE = 'hello.bin'
+IMAGE_FILE  = 'floppy.img'
+LINKER_FILE = 'linker.ld'
+
+task :default => :run
+
+task :run => [ BINARY_FILE, IMAGE_FILE ] do
+  sh "dd status=noxfer conv=notrunc if=#{BINARY_FILE} of=#{IMAGE_FILE}"
+  sh "qemu -boot a -fda #{IMAGE_FILE} -curses -monitor stdio"
+end
+
+file BINARY_FILE => [ LINKER_FILE,  OBJECT_FILE ] do
+  sh "ld -m elf_i386 -s -static -T#{LINKER_FILE} -nostdlib -nmagic --oformat binary -o #{BINARY_FILE} #{OBJECT_FILE}" 
+end
+
+file IMAGE_FILE do
+  sh "qemu-img create -f raw #{IMAGE_FILE} 1440K"
+end
+
+rule '.o' => '.c' do |t|
+  sh "gcc -masm=intel -m32 -ffreestanding -fno-common -fno-builtin -fomit-frame-pointer -O2 -c -o #{t.name} #{t.source}"
+end
+
+rule '.s' => '.c' do |t|
+  sh "gcc -S -masm=intel -m32 -ffreestanding -fno-common -fno-builtin -fomit-frame-pointer -O2 -c -o #{t.name} #{t.source}"
+end
+
+require 'rake/clean'
+CLEAN.include([ '*.bin', '*.img', '*.o' ])
+
