@@ -150,7 +150,7 @@ QEMUにフロッピーディスクイメージをマウントして、プログ�
 
 ```bash
 # QEMUの起動
-qemu -boot a -fda hello.img -curses -monitor stdio
+qemu -boot a -fda floppy.img -curses -monitor stdio
 # QEMUの終了
 (qemu) quit[enter]
 ```
